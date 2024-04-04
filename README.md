@@ -1,2 +1,3 @@
-# ansible-collection-system-utils
-Ansible Collection to manage systems and services
+# Ansible Collection - iamgini.system_utils
+
+Documentation for the collection.
