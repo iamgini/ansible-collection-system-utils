@@ -1,0 +1,13 @@
+---
+- name: Create new user
+  hosts: "{{ nodes | default('no-such-hosts') }}"
+  gather_facts: false
+  become: true
+  vars:
+    new_user_name: devops
+    new_user_password: devops
+    # new_user_public_key: 'public key string to add'
+  tasks:
+    - name: Add user
+      ansible.builtin.include_role:
+        name: add_user

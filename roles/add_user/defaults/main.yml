@@ -1,0 +1,6 @@
+---
+# defaults file for add_user
+remote_user: devops
+
+# public key string for same user
+# remote_user_public_key: ''

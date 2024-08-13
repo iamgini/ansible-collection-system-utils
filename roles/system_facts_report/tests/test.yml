@@ -1,5 +1,5 @@
 ---
 - hosts: localhost
-  remote_user: root
+  new_user: root
   roles:
     - ansible-role-system-facts-report

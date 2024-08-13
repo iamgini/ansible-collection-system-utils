@@ -1,0 +1,9 @@
+---
+- hosts: localhost
+  new_user: root
+  vars:
+    new_user_name: 'devops'
+    new_user_password: 'mypassword'
+    #new_user_public_key: '<public key string>'
+  roles:
+    - iamgini.system_utils.add_user

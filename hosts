@@ -1,0 +1,5 @@
+[me]
+localhost
+
+[rhel]
+rhel8 ansible_host=192.168.57.166
