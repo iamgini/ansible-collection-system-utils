@@ -1,0 +1,29 @@
+---
+# tasks file for httpd
+- name: Install httpd package
+  ansible.builtin.dnf:
+    name: "{{ httpd_packages }}"
+    state: present
+
+- name: Enable and start httpd service
+  ansible.builtin.systemd:
+    name: "{{ httpd_service }}"
+    enabled: true
+    state: started
+
+- name: Open HTTP (port 80) in firewalld
+  ansible.posix.firewalld:
+    service: "{{ http_item }}"
+    permanent: true
+    state: enabled
+    immediate: true
+  with_items:
+    - http
+    - https
+  loop_control:
+    loop_var: http_item
+
+- name: Reload firewalld
+  ansible.builtin.systemd:
+    name: firewalld
+    state: reloaded

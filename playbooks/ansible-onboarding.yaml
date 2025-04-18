@@ -1,0 +1,47 @@
+---
+- name: Onboard to Ansible
+  hosts: all # "{{ nodes | default('no-such-hosts') }}"
+  gather_facts: false
+  become: true
+  vars:
+    # new_user_name: devops
+    # new_user_password: devops
+    # new_user_public_key: 'public key string to add'
+    hosts_entries: |
+      10.0.7.78 ac1.lab.com
+      10.0.7.222 ac2.lab.com
+      10.0.12.2 eda1.lab.com
+      10.0.10.209 eda1.lab.com
+      10.0.6.107 gw1.lab.com
+      10.0.2.185 gw1.lab.com
+      10.0.12.30 en1.lab.com
+      10.0.9.159 en2.lab.com
+      10.0.9.244 db1.lab.com
+      10.0.10.81 hub1.lab.com
+  tasks:
+    - name: Add user
+      ansible.builtin.include_role:
+        name: add_user
+      when: new_user_name is defined
+
+    - name: Create a local file with hostnames only
+      delegate_to: localhost
+      become: false
+      run_once: true
+      ansible.builtin.copy:
+        content: "{{ hosts_entries | regex_replace('\\d+\\.\\d+\\.\\d+\\.\\d+ ', '') }}"
+        dest: ./hostnames
+        mode: "0644"
+
+    - name: Update /etc/hosts with node entries
+      ansible.builtin.blockinfile:
+        path: /etc/hosts
+        block: "{{ hosts_entries }}"
+      become: true
+
+    - name: Deploy SSH public key to target user
+      ansible.posix.authorized_key:
+        user: "{{ ansible_user }}"
+        state: present
+        key: "{{ lookup('file', ssh_public_key_file) }}"
+      when: ssh_public_key_file is defined

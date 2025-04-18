@@ -1,0 +1,9 @@
+---
+- name: Setup Apache HTTP server with firewall rules
+  hosts: all
+  become: true
+
+  tasks:
+    - name: Install and setup httpd
+      ansible.builtin.include_role:
+        name: httpd

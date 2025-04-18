@@ -15,8 +15,8 @@ ansible-galaxy collection install iamgini.system_utils
 ```shell
 $ ansible-navigator run playbooks/create-user.yaml \
     -e "nodes=rhel8" \
-    -e "new_user_public_key='your-ssh-public-key'" \
-    -u vagrant
+    -u vagrant \
+    -e "new_user_public_key='your-ssh-public-key'"
 ```
 
 ## Sample Playbooks
