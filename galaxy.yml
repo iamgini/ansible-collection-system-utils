@@ -1,7 +1,7 @@
 ---
 namespace: iamgini
 name: system_utils
-version: 0.3.0
+version: 0.4.0
 readme: README.md
 authors:
   - Gineesh Madapparambath <net.gini@gmail.com>
