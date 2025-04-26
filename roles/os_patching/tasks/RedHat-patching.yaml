@@ -1,0 +1,46 @@
+
+- name: Updating all packages on Host
+  ansible.builtin.yum:
+    name: '*'
+    state: latest
+    update_cache: true
+    update_only: false
+  register: package_update_status
+
+- name: Package Update Status for debug
+  ansible.builtin.debug:
+    msg: "{{ package_update_status }}"
+  when: dev_debug | default(false) | bool
+
+- name: Comparing last updated kernel and running kernel
+  ansible.builtin.shell: |
+    LAST_KERNEL=$(rpm -q --last kernel |head -1 | awk '{print $1}' | sed 's/kernel-//');
+    CURRENT_KERNEL=$(uname -r)
+
+    if [[ $LAST_KERNEL != $CURRENT_KERNEL ]]; then
+      # Set reboot flag
+      touch /tmp/reboot
+      echo "KERNEL_CHANGED"
+    else
+      echo "No KERNEL Change Detected"
+    fi
+  register: kernel_update_status
+
+- name: Reboot Requirement
+  ansible.builtin.debug:
+    msg: "{{ kernel_update_status.stdout }}"
+
+- name: Pre-Reboot Scripts
+  ansible.builtin.debug:
+    msg: "Running Pre-Reboot scripts............."
+
+- name: Reboot the machine (Wait for 5 min or 300 Sec)
+  ansible.builtin.reboot:
+    reboot_timeout: 300
+    test_command: uptime
+  when: package_update_status.changed or kernel_update_status.stdout == "KERNEL_CHANGED"
+  register: reboot_status
+
+- name: Machine after reboot
+  dansible.builtin.debug:
+    msg: "{{ reboot_status }}"

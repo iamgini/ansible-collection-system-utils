@@ -27,3 +27,6 @@
   ansible.builtin.systemd:
     name: firewalld
     state: reloaded
+
+# - name: Restore SELinux context on /var/www/html/software
+#   command: restorecon -Rv /var/www/html/software
