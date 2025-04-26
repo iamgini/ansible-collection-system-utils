@@ -1,0 +1,26 @@
+- name: Update apt cache
+  ansible.builtin.apt:
+    update_cache: true
+
+- name: Upgrade all packages
+  ansible.builtin.apt:
+    upgrade: dist
+    autoremove: true
+
+- name: Package Update Status for debug
+  ansible.builtin.debug:
+    msg: "{{ package_update_status }}"
+  when: dev_debug | default(false) | bool
+
+- name: Compare running kernel with latest installed kernel (Debian)
+  ansible.builtin.shell: |
+    LAST_KERNEL=$(dpkg --list | grep '^ii' | grep 'linux-image-[0-9]' | awk '{print $2}' | sort -V | tail -1 | sed 's/linux-image-//')
+    CURRENT_KERNEL=$(uname -r)
+
+    if [[ "$LAST_KERNEL" != "$CURRENT_KERNEL" ]]; then
+      touch /tmp/reboot
+      echo "KERNEL_CHANGED"
+    else
+      echo "No KERNEL Change Detected"
+    fi
+  register: kernel_update_status

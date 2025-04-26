@@ -2,4 +2,23 @@
 # tasks file for os_patching
 - name: OS Patching tasks
   ansible.builtin.include_tasks:
-    file: "{{ ansible_os_family }}-patching.yaml"
+    file: "{{ ansible_os_family }}.yaml"
+
+- name: Reboot Requirement
+  ansible.builtin.debug:
+    msg: "{{ kernel_update_status.stdout }}"
+
+- name: Pre-Reboot Scripts
+  ansible.builtin.debug:
+    msg: "Running Pre-Reboot scripts............."
+
+- name: Reboot the machine (Wait for 5 min or 300 Sec)
+  ansible.builtin.reboot:
+    reboot_timeout: 300
+    test_command: uptime
+  when: package_update_status.changed or kernel_update_status.stdout == "KERNEL_CHANGED"
+  register: reboot_status
+
+- name: Machine after reboot
+  ansible.builtin.debug:
+    msg: "{{ reboot_status }}"
