@@ -9,7 +9,7 @@ on:
 jobs:
   content-scan:
     # this calls the shared workflow in your shared repo
-    uses: iamgini/ansible-content-scanning-pipeline/.github/workflows/content-scanning.yml@main
+    uses: iamgini/ansible-content-scanning-pipeline/.github/workflows/main-pipeline.yml@main
     with:
       path: "./"
     secrets: inherit
