@@ -10,3 +10,9 @@ jobs:
   content-scan:
     uses: iamgini/ansible-content-scanning-pipeline/.github/workflows/main-pipeline.yml@main
     secrets: inherit
+    with:
+      run_secret_detection: true
+      run_lint: true
+      run_sast: true
+      run_tagging: false
+      run_sign: false
