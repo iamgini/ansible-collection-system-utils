@@ -6,7 +6,6 @@ on:
       - main
   pull_request:
 
-
 jobs:
   content-scan:
     uses: iamgini/ansible-content-scanning-pipeline/.github/workflows/main-pipeline.yml@main
